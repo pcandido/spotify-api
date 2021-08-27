@@ -1,48 +1,14 @@
-// import nodemailer from 'nodemailer'
-// import config from './config'
-
 import nodemailer from 'nodemailer'
 import { EmailMessage, EmailSender } from '@usecases/protocols/email/email-sender'
 import { EmailConfig } from './email-config'
-
-
-
-// export interface EmailMessage {
-//   to: string
-//   subject: string
-//   body: string
-// }
-
-// export async function sendEmail(message: EmailMessage) {
-
-//   const transporter = nodemailer.createTransport({
-//     host: config.email.host,
-//     port: config.email.port,
-//     secure: config.email.secure,
-//     auth: {
-//       user: config.email.user,
-//       pass: config.email.password,
-//     },
-//   })
-
-//   const { to, subject, body } = message
-
-//   console.log(`sending email to ${to}`)
-
-//   const info = await transporter.sendMail({
-//     from: `"${config.email.name}" <${config.email.address}>`,
-//     to,
-//     subject,
-//     html: body,
-//   })
-
-//   console.log(`Message sent: ${info.messageId}`)
-
-// }
+import { Logger } from '@utils/logger'
 
 export class NodeMailerAdapter implements EmailSender {
 
-  constructor(private config: EmailConfig) { }
+  constructor(
+    private config: EmailConfig,
+    private logger: Logger,
+  ) { }
 
   async send(message: EmailMessage): Promise<void> {
     const transport = nodemailer.createTransport({
@@ -55,7 +21,14 @@ export class NodeMailerAdapter implements EmailSender {
       },
     })
 
+    const info = await transport.sendMail({
+      from: `${this.config.sender} <${this.config.user}>`,
+      to: message.to,
+      subject: message.subject,
+      text: message.body,
+    })
 
+    this.logger.info(`email sent to ${message.to}: ${info.messageId}`)
   }
 
 }
