@@ -4,15 +4,16 @@ import { PasswordRecoveryController } from '@controllers/controllers/password-re
 import { passwordRecoveryValidator } from '@controllers/controllers/password-recovery/password-recovery-validator'
 import { ControllerLogger } from '@controllers/decorators/controller-logger'
 import { Controller } from '@controllers/protocols'
-import { EmailQueueAdapter } from '@gateways/adapters/email/email-queue-adapter'
 import { JwtAdapter } from '@gateways/adapters/jwt-adapter/jwt-adapter'
 import { AccountMongoRepository } from '@gateways/repositories/acount/account-mongo-repository'
 import { PasswordRecoveryUseCase } from '@usecases/usecases/password-recovery/password-recovery-usecase'
 import { ConsoleLoggerAdapter } from '@utils/console-logger-adapter'
 import { EmailValidatorAdapter } from '@utils/email-validator-adapter'
+import { NodeMailerAdapter } from '@gateways/adapters/email/nodemailer-adapter'
 
 export const makePasswordRecoveryController = (): Controller => {
-  const emailSender = new EmailQueueAdapter(config.app.passwordRecovery.queueName)
+  const consoleLoggerAdapter = new ConsoleLoggerAdapter()
+  const emailSender = new NodeMailerAdapter({ ...config.email }, consoleLoggerAdapter)
   const tokenGenerator = new JwtAdapter(config.app.jwt.secret)
   const loadByEmailRepository = new AccountMongoRepository()
   const passwordRecovery = new PasswordRecoveryUseCase(
@@ -27,6 +28,5 @@ export const makePasswordRecoveryController = (): Controller => {
   const emailValidator = new EmailValidatorAdapter()
   const validator = passwordRecoveryValidator(emailValidator)
   const passwordRecoveryController = new PasswordRecoveryController(validator, passwordRecovery)
-  const consoleLoggerAdapter = new ConsoleLoggerAdapter()
   return new ControllerLogger(passwordRecoveryController, consoleLoggerAdapter)
 }
