@@ -5,8 +5,8 @@ import { JwtAdapter } from '@gateways/adapters/jwt-adapter/jwt-adapter'
 import { AccountMongoRepository } from '@gateways/repositories/acount/account-mongo-repository'
 import { ConsoleLoggerAdapter } from '@utils/console-logger-adapter'
 import { RefreshTokenUseCase } from '@usecases/usecases/refresh-token/refresh-token-usecase'
-import { refreshTokenValidator } from '@controllers/controllers/refresh/refresh-token-validator'
-import { RefreshTokenController } from '@controllers/controllers/refresh/refresh-token-controller'
+import { refreshTokenValidator } from '@controllers/controllers/account/refresh/refresh-token-validator'
+import { RefreshTokenController } from '@controllers/controllers/account/refresh/refresh-token-controller'
 
 export const makeRefreshTokenController = (): AuthenticatedController => {
   const loadByEmailRepository = new AccountMongoRepository()
