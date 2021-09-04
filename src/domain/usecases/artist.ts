@@ -3,8 +3,9 @@ import { AccountPublicModel } from '@domain/models'
 import { ArtistModel } from '@domain/models/artist'
 
 export interface CreateArtistModel {
-  name: string,
-  image: MultiPartFile,
+  name: string
+  description: string
+  image: MultiPartFile
 }
 
 export interface CreateArtist {

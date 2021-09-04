@@ -22,26 +22,32 @@ describe('ArtistValidator', () => {
 
   it('should throw if no name is provided', async () => {
     const { sut } = makeSut()
-    const givenRequest = { image: makeImage() }
+    const givenRequest = { description: 'any description', image: makeImage() }
     expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('name'))
+  })
+
+  it('should throw if no description is provided', async () => {
+    const { sut } = makeSut()
+    const givenRequest = { name: 'any name', image: makeImage() }
+    expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('description'))
   })
 
   it('should throw if no image is provided', async () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name' }
+    const givenRequest = { name: 'any name', description: 'any description' }
     expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('image'))
   })
 
   it('should throw if mime type is not image', async () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name', image: makeImage() }
+    const givenRequest = { name: 'any name', description: 'any description', image: makeImage() }
     givenRequest.image.mimeType = 'application/json'
     expect(() => sut.validate(givenRequest)).toThrow(new InvalidParamError('image'))
   })
 
   it('should not throw if no validator throws', () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name', image: makeImage() }
+    const givenRequest = { name: 'any name', description: 'any description', image: makeImage() }
     expect(() => sut.validate(givenRequest)).not.toThrow()
   })
 

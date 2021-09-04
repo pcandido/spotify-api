@@ -14,6 +14,7 @@ interface SutTypes {
 
 const generatedId = 'generated-id'
 const givenName = 'any name'
+const givenDescription = 'any description'
 const givenImageSet: ImageSet = {
   uri: 'uri',
   uri64: 'uri64',
@@ -35,6 +36,7 @@ const makeCreateArtistStub = () => {
       return {
         id: generatedId,
         name: artist.name,
+        description: givenDescription,
         ownerId: account.id,
         image: givenImageSet,
       }
@@ -126,6 +128,7 @@ describe('CreateArtistController', () => {
     expect(result).toEqual(ok({
       id: generatedId,
       name: givenName,
+      description: givenDescription,
       ownerId: givenAccount.id,
       image: givenImageSet,
     }))
