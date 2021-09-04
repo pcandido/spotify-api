@@ -6,7 +6,7 @@ import { AccountMongoRepository } from '@gateways/repositories/acount/account-mo
 import { ConsoleLoggerAdapter } from '@utils/console-logger-adapter'
 import { PasswordResetController } from '@controllers/controllers/account/password-reset/password-reset-controller'
 import { passwordResetValidator } from '@controllers/controllers/account/password-reset/password-reset-validator'
-import { PasswordResetUseCase } from '@usecases/usecases/password-reset/password-reset-usecase'
+import { PasswordResetUseCase } from '@usecases/usecases/account/password-reset/password-reset-usecase'
 import { BCryptAdapter } from '@gateways/adapters/bcrypt-adapter/bcrypt-adapter'
 
 export const makePasswordResetController = (): Controller => {

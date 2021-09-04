@@ -5,7 +5,7 @@ import { AccountMongoRepository } from '@gateways/repositories/acount/account-mo
 import { ConsoleLoggerAdapter } from '@utils/console-logger-adapter'
 import { SetImageController } from '@controllers/controllers/account/image/set-image-controller'
 import { setImageValidator } from '@controllers/controllers/account/image/set-image-validator'
-import { SetImageUsecase } from '@usecases/usecases/set-image/set-image-usecase'
+import { SetImageUsecase } from '@usecases/usecases/account/set-image/set-image-usecase'
 import { JimpAdapter } from '@gateways/adapters/jimp-adapter/jimp-adapter'
 import { S3Adapter } from '@gateways/adapters/s3-adapter/s3-adapter'
 

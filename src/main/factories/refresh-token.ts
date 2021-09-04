@@ -4,7 +4,7 @@ import { AuthenticatedControllerLogger } from '@controllers/decorators/controlle
 import { JwtAdapter } from '@gateways/adapters/jwt-adapter/jwt-adapter'
 import { AccountMongoRepository } from '@gateways/repositories/acount/account-mongo-repository'
 import { ConsoleLoggerAdapter } from '@utils/console-logger-adapter'
-import { RefreshTokenUseCase } from '@usecases/usecases/refresh-token/refresh-token-usecase'
+import { RefreshTokenUseCase } from '@usecases/usecases/account/refresh-token/refresh-token-usecase'
 import { refreshTokenValidator } from '@controllers/controllers/account/refresh/refresh-token-validator'
 import { RefreshTokenController } from '@controllers/controllers/account/refresh/refresh-token-controller'
 
