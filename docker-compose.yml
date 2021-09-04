@@ -1,21 +1,29 @@
 version: "3"
 
 volumes:
-    volume_account_mongo:
-    volume_account_s3:
+    volume_mongo:
+    volume_s3:
     volume_rabbitmq:
 
 secrets:
     MONGO_PASSWORD:
-        file: secrets/mongo-password
+      file: secrets/mongo-password
     MONGO_URL:
-        file: secrets/mongo-url
+      file: secrets/mongo-url
     JWT_SECRET_PHRASE:
-        file: secrets/jwt-secret
+      file: secrets/jwt-secret
+    EMAIL_HOST:
+      file: secrets/email-host
+    EMAIL_PORT:
+      file: secrets/email-port
+    EMAIL_USER:
+      file: secrets/email-user
+    EMAIL_PASSWORD:
+      file: secrets/email-password
 
 networks:
-    network_account_database:
-    network_account_s3:
+    network_database:
+    network_s3:
     network_rabbitmq:
           
 services:
@@ -25,55 +33,60 @@ services:
         restart: unless-stopped
         ports: 
             - 8881:15672
+            - 5672:5672
         volumes: 
             - volume_rabbitmq:/var/lib/rabbitmq
         networks: 
             - network_rabbitmq
 
-    account-mongo:
+    mongodb:
         image: mongo
         restart: always
         ports:
             - 27017:27017
         volumes:
-            - volume_account_mongo:/data/db
+            - volume_mongo:/data/db
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/MONGO_PASSWORD
         secrets:
             - MONGO_PASSWORD
         networks:
-            - network_account_database
+            - network_database
 
-    account-s3:
+    s3:
         image: lphoward/fake-s3
         restart: always
         ports:
             - 4569:4569
         volumes:
-            - volume_account_s3:/fakes3_root
+            - volume_s3:/fakes3_root
         networks:
-            - network_account_s3
+            - network_s3
 
-    account-api:
-        image: pcandido/ms-account
-        build: .
-        restart: always
-        depends_on:
-            - account-mongo
-            - account-s3
-            - rabbitmq
-        ports: 
-            - 3000:3000
-        environment:
-            PORT: 3000
-            S3_ENDPOINT: http://account-s3:4569
-            PASSWORD_RECOVERY_RABBITMQ_HOST: rabbitmq
-        secrets:
-            - MONGO_URL
-            - JWT_SECRET_PHRASE
-        networks:
-            - network_account_database
-            - network_account_s3
-            - network_rabbitmq
+    # spotify-api:
+    #     image: pcandido/spotify-api
+    #     build: .
+    #     restart: always
+    #     depends_on:
+    #         - mongodb
+    #         - s3
+    #         - rabbitmq
+    #     ports: 
+    #         - 8000:8000
+    #     environment:
+    #         PORT: 8000
+    #         S3_ENDPOINT: http://s3:4569
+    #         PASSWORD_RECOVERY_RABBITMQ_HOST: rabbitmq
+    #     secrets:
+    #         - MONGO_URL
+    #         - JWT_SECRET_PHRASE
+    #         - EMAIL_HOST
+    #         - EMAIL_PORT
+    #         - EMAIL_USER
+    #         - EMAIL_PASSWORD
+    #     networks:
+    #         - network_database
+    #         - network_s3
+    #         - network_rabbitmq
           
