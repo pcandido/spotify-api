@@ -22,32 +22,41 @@ describe('ArtistValidator', () => {
 
   it('should throw if no name is provided', async () => {
     const { sut } = makeSut()
-    const givenRequest = { description: 'any description', image: makeImage() }
+    const givenRequest = { description: 'any description', images: makeImage() }
     expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('name'))
   })
 
   it('should throw if no description is provided', async () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name', image: makeImage() }
+    const givenRequest = { name: 'any name', images: makeImage() }
     expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('description'))
   })
 
   it('should throw if no image is provided', async () => {
     const { sut } = makeSut()
     const givenRequest = { name: 'any name', description: 'any description' }
-    expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('image'))
+    expect(() => sut.validate(givenRequest)).toThrow(new MissingParamError('images'))
   })
 
-  it('should throw if mime type is not image', async () => {
+  it('should throw if image array is empty', async () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name', description: 'any description', image: makeImage() }
-    givenRequest.image.mimeType = 'application/json'
-    expect(() => sut.validate(givenRequest)).toThrow(new InvalidParamError('image'))
+    const givenRequest = { name: 'any name', description: 'any description', images: [] }
+    expect(() => sut.validate(givenRequest)).toThrow(new InvalidParamError('images'))
+  })
+
+  it('should throw if any file mime type is not image', async () => {
+    const { sut } = makeSut()
+    const image1 = makeImage()
+    const image2 = makeImage()
+    image2.mimeType = 'application/json'
+
+    const givenRequest = { name: 'any name', description: 'any description', images: [image1, image2] }
+    expect(() => sut.validate(givenRequest)).toThrow(new InvalidParamError('images'))
   })
 
   it('should not throw if no validator throws', () => {
     const { sut } = makeSut()
-    const givenRequest = { name: 'any name', description: 'any description', image: makeImage() }
+    const givenRequest = { name: 'any name', description: 'any description', images: [makeImage()] }
     expect(() => sut.validate(givenRequest)).not.toThrow()
   })
 
