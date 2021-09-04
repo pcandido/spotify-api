@@ -5,5 +5,5 @@ export interface ArtistModel {
   name: string
   description: string
   ownerId: string
-  image: ImageSet
+  images: ImageSet[]
 }

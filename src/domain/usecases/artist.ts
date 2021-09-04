@@ -5,7 +5,7 @@ import { ArtistModel } from '@domain/models/artist'
 export interface CreateArtistModel {
   name: string
   description: string
-  image: MultiPartFile
+  images: MultiPartFile[]
 }
 
 export interface CreateArtist {

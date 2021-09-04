@@ -38,7 +38,7 @@ const makeCreateArtistStub = () => {
         name: artist.name,
         description: givenDescription,
         ownerId: account.id,
-        image: givenImageSet,
+        images: [givenImageSet, givenImageSet],
       }
     }
   }
@@ -69,7 +69,7 @@ const givenAccount = {
 const makeRequest = () => ({
   body: {
     name: givenName,
-    image: makeImage(),
+    image: [makeImage(), makeImage()],
   },
   account: givenAccount,
 })
@@ -130,7 +130,7 @@ describe('CreateArtistController', () => {
       name: givenName,
       description: givenDescription,
       ownerId: givenAccount.id,
-      image: givenImageSet,
+      images: [givenImageSet, givenImageSet],
     }))
   })
 
