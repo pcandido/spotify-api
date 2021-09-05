@@ -1,5 +1,5 @@
 import { AccountPublicModel } from '@domain/models'
-import { CreateArtistModel } from '@domain/usecases/artist'
+import { CreateArtistModel } from '@domain/usecases/metadata/artist'
 import { ImagePersister } from '@usecases/protocols/image/image-persister'
 import { ImageResizer } from '@usecases/protocols/image/image-resizer'
 import { CreateArtistRepository, CreateArtistRepositoryModel } from '@usecases/protocols/metadata/artist/create-artist-repository'

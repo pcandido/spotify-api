@@ -1,7 +1,7 @@
 import { MultiPartFile } from '@controllers/protocols'
 import { AccountPublicModel, ImageSet } from '@domain/models'
 import { ArtistModel } from '@domain/models/artist'
-import { CreateArtist, CreateArtistModel } from '@domain/usecases/artist'
+import { CreateArtist, CreateArtistModel } from '@domain/usecases/metadata/artist'
 import { ImagePersister } from '@usecases/protocols/image/image-persister'
 import { ImageResizer } from '@usecases/protocols/image/image-resizer'
 import { CreateArtistRepository } from '@usecases/protocols/metadata/artist/create-artist-repository'

@@ -1,6 +1,6 @@
 import { ok, serverError } from '@controllers/helpers/http-helper'
 import { AuthenticatedController, AuthenticatedRequest, Response, Validator } from '@controllers/protocols'
-import { CreateMetadata } from '@domain/usecases/metadata'
+import { CreateMetadata } from '@domain/usecases/metadata/metadata'
 import { UserError } from '@errors/user-error'
 
 export class CreateMetadataController<T, R> implements AuthenticatedController {

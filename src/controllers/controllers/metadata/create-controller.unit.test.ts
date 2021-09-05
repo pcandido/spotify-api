@@ -2,7 +2,7 @@ import { ValidationError } from '@controllers/errors'
 import { badRequest, ok, serverError } from '@controllers/helpers/http-helper'
 import { Validator } from '@controllers/protocols'
 import { AccountPublicModel } from '@domain/models'
-import { CreateMetadata } from '@domain/usecases/metadata'
+import { CreateMetadata } from '@domain/usecases/metadata/metadata'
 import { CreateMetadataController } from './create-controller'
 
 interface CreateModel {
