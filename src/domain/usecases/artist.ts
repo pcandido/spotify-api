@@ -1,6 +1,6 @@
 import { MultiPartFile } from '@controllers/protocols'
-import { AccountPublicModel } from '@domain/models'
 import { ArtistModel } from '@domain/models/artist'
+import { CreateMetadata } from './metadata'
 
 export interface CreateArtistModel {
   name: string
@@ -8,6 +8,4 @@ export interface CreateArtistModel {
   images: MultiPartFile[]
 }
 
-export interface CreateArtist {
-  create(account: AccountPublicModel, artist: CreateArtistModel): Promise<ArtistModel>
-}
+export type CreateArtist = CreateMetadata<CreateArtistModel, ArtistModel>

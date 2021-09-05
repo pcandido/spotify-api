@@ -1,25 +1,27 @@
 import { ValidationError } from '@controllers/errors'
 import { badRequest, ok, serverError } from '@controllers/helpers/http-helper'
-import { MultiPartFile, Validator } from '@controllers/protocols'
-import { AccountPublicModel, ImageSet } from '@domain/models'
-import { ArtistModel } from '@domain/models/artist'
-import { CreateArtist, CreateArtistModel } from '@domain/usecases/artist'
-import { CreateArtistController } from './create-artist-controller'
+import { Validator } from '@controllers/protocols'
+import { AccountPublicModel } from '@domain/models'
+import { CreateMetadata } from '@domain/usecases/metadata'
+import { CreateMetadataController } from './create-controller'
+
+interface CreateModel {
+  name: string
+}
+
+interface Model {
+  id: string
+  name: string
+}
 
 interface SutTypes {
-  sut: CreateArtistController,
+  sut: CreateMetadataController<CreateModel, Model>,
   validatorStub: Validator,
-  createArtistStub: CreateArtist
+  createMetadataStub: CreateMetadata<CreateModel, Model>
 }
 
 const generatedId = 'generated-id'
 const givenName = 'any name'
-const givenDescription = 'any description'
-const givenImageSet: ImageSet = {
-  uri: 'uri',
-  uri64: 'uri64',
-  uri256: 'uri256',
-}
 
 const makeValidatorStub = () => {
   class ValidatorStub implements Validator {
@@ -30,35 +32,25 @@ const makeValidatorStub = () => {
   return new ValidatorStub
 }
 
-const makeCreateArtistStub = () => {
-  class CreateArtistStub implements CreateArtist {
-    async create(account: AccountPublicModel, artist: CreateArtistModel): Promise<ArtistModel> {
+const makeCreateMetadataStub = () => {
+  class CreateMetadataStub implements CreateMetadata<CreateModel, Model> {
+    async create(account: AccountPublicModel, data: CreateModel): Promise<Model> {
       return {
         id: generatedId,
-        name: artist.name,
-        description: givenDescription,
-        ownerId: account.id,
-        images: [givenImageSet, givenImageSet],
+        name: data.name,
       }
     }
   }
-  return new CreateArtistStub()
+  return new CreateMetadataStub()
 }
 
 const makeSut = (): SutTypes => {
   const validatorStub = makeValidatorStub()
-  const createArtistStub = makeCreateArtistStub()
-  const sut = new CreateArtistController(validatorStub, createArtistStub)
+  const createMetadataStub = makeCreateMetadataStub()
+  const sut = new CreateMetadataController(validatorStub, createMetadataStub)
 
-  return { sut, validatorStub, createArtistStub }
+  return { sut, validatorStub, createMetadataStub }
 }
-
-const makeImage = (): MultiPartFile => ({
-  originalName: 'any_name',
-  size: 500,
-  mimeType: 'image/jpg',
-  buffer: Buffer.from('any_image', 'utf-8'),
-})
 
 const givenAccount = {
   id: '123',
@@ -69,12 +61,11 @@ const givenAccount = {
 const makeRequest = () => ({
   body: {
     name: givenName,
-    image: [makeImage(), makeImage()],
   },
   account: givenAccount,
 })
 
-describe('CreateArtistController', () => {
+describe('CreateMetadataController', () => {
 
   it('should call validator with received body', async () => {
     const { sut, validatorStub } = makeSut()
@@ -105,32 +96,29 @@ describe('CreateArtistController', () => {
     expect(response).toEqual(serverError(givenError))
   })
 
-  it('should call CreateArtist with received data', async () => {
-    const { sut, createArtistStub } = makeSut()
+  it('should call CreateMetadata with received data', async () => {
+    const { sut, createMetadataStub } = makeSut()
     const givenRequest = makeRequest()
-    const setImageSpy = jest.spyOn(createArtistStub, 'create')
+    const setImageSpy = jest.spyOn(createMetadataStub, 'create')
 
     await sut.handle(givenRequest)
     expect(setImageSpy).toBeCalledWith(givenAccount, givenRequest.body)
   })
 
-  it('should return 500 if CreateArtist throws', async () => {
-    const { sut, createArtistStub } = makeSut()
+  it('should return 500 if CreateMetadata throws', async () => {
+    const { sut, createMetadataStub } = makeSut()
     const givenError = new Error('any error')
-    jest.spyOn(createArtistStub, 'create').mockRejectedValueOnce(givenError)
+    jest.spyOn(createMetadataStub, 'create').mockRejectedValueOnce(givenError)
     const result = await sut.handle(makeRequest())
     expect(result).toEqual(serverError(givenError))
   })
 
-  it('should return 200 and the artist set on success', async () => {
+  it('should return 200 and the created data on success', async () => {
     const { sut } = makeSut()
     const result = await sut.handle(makeRequest())
     expect(result).toEqual(ok({
       id: generatedId,
       name: givenName,
-      description: givenDescription,
-      ownerId: givenAccount.id,
-      images: [givenImageSet, givenImageSet],
     }))
   })
 
