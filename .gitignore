@@ -4,3 +4,4 @@ coverage
 globalConfig.json
 secrets
 .env
+TODO.md
