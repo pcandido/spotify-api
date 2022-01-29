@@ -22,7 +22,7 @@ export const unauthorized = (error: AuthenticationError): Response => ({
   body: error,
 })
 
-export const serverError = (error: Error): Response => ({
+export const serverError = (error: Error | unknown): Response => ({
   statusCode: 500,
-  body: new ServerError(error),
+  body: new ServerError((error instanceof Error) ? error : undefined),
 })
