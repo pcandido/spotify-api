@@ -30,7 +30,6 @@ services:
 
     rabbitmq:
         image: rabbitmq:management
-        restart: unless-stopped
         ports: 
             - 8881:15672
             - 5672:5672
@@ -41,7 +40,6 @@ services:
 
     mongodb:
         image: mongo
-        restart: always
         ports:
             - 27017:27017
         volumes:
@@ -56,7 +54,6 @@ services:
 
     s3:
         image: lphoward/fake-s3
-        restart: always
         ports:
             - 4569:4569
         volumes:
